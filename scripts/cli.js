@@ -355,6 +355,53 @@ ${t("guide_step3", lang)}
 `);
 }
 
+function cmdDeploy() {
+  const { execSync } = require("child_process");
+  console.log("\n=======================================================");
+  console.log("   🚀 Automated 1-Click Vercel Relay Deployer");
+  console.log("=======================================================\n");
+
+  const templateDir = path.join(__dirname, "..", "templates", "vercel-relay");
+  if (!fs.existsSync(templateDir)) {
+    console.error("[-] Template directory not found:", templateDir);
+    return;
+  }
+
+  console.log("[*] Checking Vercel CLI availability...");
+  try {
+    console.log("[*] Deploying high-speed edge relay to your Vercel account...");
+    console.log("    (If not logged in, Vercel will open your browser to log in)\n");
+
+    const out = execSync("npx --yes vercel --prod --yes", {
+      cwd: templateDir,
+      encoding: "utf8",
+      stdio: ["inherit", "pipe", "pipe"]
+    });
+
+    const match = out.match(/https:\/\/[a-zA-Z0-9-]+\.vercel\.app/);
+    if (match && match[0]) {
+      const deployedUrl = match[0];
+      console.log(`\n\x1b[32m[+] Deployment succeeded!\x1b[0m`);
+      console.log(`[*] New Private Relay URL: ${deployedUrl}`);
+
+      cmdSet(deployedUrl);
+      console.log(`[*] Testing live connectivity...`);
+      cmdTest(deployedUrl);
+      console.log("\n[+] Fully automated! Your Antigravity is now using your private relay.");
+    } else {
+      console.log(out);
+      console.log("\n[*] Deployment finished. Please copy the deployment URL and run:");
+      console.log("    agy-relay set <your-url>");
+    }
+  } catch (err) {
+    console.error("[-] Deploy output / error:", err.message);
+    console.log("\n💡 Manual 1-minute alternative:");
+    console.log("1. Open https://vercel.com and log in");
+    console.log(`2. cd "${templateDir}" && npx vercel --prod`);
+    console.log("3. agy-relay set <your-url>");
+  }
+}
+
 function cmdPatch() {
   console.log("ℹ️ In-place binary modification is disabled to protect Antigravity language_server.");
   console.log("💡 The Vercel relay runs automatically via PreInvocation hook on port 19876.");
@@ -391,6 +438,9 @@ switch (cmd) {
   case "restart":
     cmdStop();
     setTimeout(cmdStart, 800);
+    break;
+  case "deploy":
+    cmdDeploy();
     break;
   case "lang":
     cmdLang(cleanArgs[1]);
