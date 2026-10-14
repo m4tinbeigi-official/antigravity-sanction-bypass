@@ -490,9 +490,16 @@
           </div>
         </div>
 
-        <div class="live-status-pill" id="global-status-badge">
-          <div class="pulse-dot"></div>
-          <span id="global-status-text">رله فعال و آماده به کار</span>
+        <div class="header-actions-group" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <button class="btn btn-secondary" id="toggle-bypass-btn" onclick="toggleBypass()" style="padding: 7px 16px; font-size: 13px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 8px;">
+            <span id="toggle-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+            <span id="toggle-btn-text">بای‌پَس فعال (کلیک برای خاموش)</span>
+          </button>
+
+          <div class="live-status-pill" id="global-status-badge">
+            <div class="pulse-dot" id="global-pulse-dot"></div>
+            <span id="global-status-text">رله فعال و آماده به کار</span>
+          </div>
         </div>
       </div>
     </header>
@@ -681,6 +688,69 @@
       setTimeout(() => { toast.style.display = 'none'; }, 4500);
     }
 
+    let isBypassEnabled = true;
+
+    async function toggleBypass() {
+      const btn = document.getElementById('toggle-bypass-btn');
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/toggle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ enabled: !isBypassEnabled })
+        });
+        const data = await res.json();
+        if (data.success) {
+          updateToggleUI(data.enabled);
+          showToast(data.enabled ? 'پل بای‌پَس با موفقیت روشن شد.' : 'پل بای‌پَس خاموش شد (اتصال مستقیم فعال است).', data.enabled);
+          if (data.enabled) runPingTest();
+        }
+      } catch (e) {
+        showToast('خطا در تغییر وضعیت بای‌پَس: ' + e.message, false);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function updateToggleUI(enabled) {
+      isBypassEnabled = enabled;
+      const btn = document.getElementById('toggle-bypass-btn');
+      const dot = document.getElementById('toggle-dot');
+      const btnText = document.getElementById('toggle-btn-text');
+      const badge = document.getElementById('global-status-badge');
+      const badgeText = document.getElementById('global-status-text');
+      const pulse = document.getElementById('global-pulse-dot');
+
+      if (enabled) {
+        btn.style.background = 'rgba(16, 185, 129, 0.15)';
+        btn.style.border = '1px solid rgba(16, 185, 129, 0.4)';
+        btn.style.color = '#34d399';
+        dot.style.background = '#10b981';
+        btnText.innerText = 'بای‌پَس فعال (کلیک برای خاموش)';
+        badge.style.background = 'rgba(16, 185, 129, 0.12)';
+        badge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+        badge.style.color = '#34d399';
+        badgeText.innerText = 'رله فعال و آماده به کار';
+        if (pulse) {
+          pulse.style.background = '#10b981';
+          pulse.style.display = 'block';
+        }
+      } else {
+        btn.style.background = 'rgba(244, 63, 94, 0.15)';
+        btn.style.border = '1px solid rgba(244, 63, 94, 0.4)';
+        btn.style.color = '#fb7185';
+        dot.style.background = '#f43f5e';
+        btnText.innerText = 'بای‌پَس غیرفعال (کلیک برای روشن)';
+        badge.style.background = 'rgba(245, 158, 11, 0.12)';
+        badge.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+        badge.style.color = '#fbbf24';
+        badgeText.innerText = 'رله موقتاً خاموش است';
+        if (pulse) {
+          pulse.style.background = '#f59e0b';
+        }
+      }
+    }
+
     async function loadInitialStatus() {
       try {
         const res = await fetch('/status');
@@ -689,6 +759,7 @@
           document.getElementById('relay-url-input').value = data.activeRelayUrl || '';
           document.getElementById('metric-country').innerText = data.country || 'US';
           document.getElementById('metric-port').innerText = toFaNumber(data.bridgePort || '۱۹۸۷۶');
+          updateToggleUI(data.enabled !== false);
         }
       } catch (err) {
         console.error('Error fetching initial status:', err);

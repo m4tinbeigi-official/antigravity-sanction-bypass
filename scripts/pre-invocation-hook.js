@@ -18,8 +18,13 @@ function isBridgeRunning() {
   if (!fs.existsSync(PID_FILE)) return false;
   try {
     const pid = parseInt(fs.readFileSync(PID_FILE, "utf8").trim(), 10);
-    process.kill(pid, 0);
-    return true;
+    if (!pid || isNaN(pid)) return false;
+    try {
+      process.kill(pid, 0);
+      return true;
+    } catch (e) {
+      return e.code === "EPERM";
+    }
   } catch {
     return false;
   }
@@ -31,6 +36,7 @@ function ensureBridgeStarted() {
     const child = spawn(process.execPath, [BRIDGE_SCRIPT], {
       detached: true,
       stdio: "ignore",
+      windowsHide: true,
       env: { ...process.env, DAEMON_MODE: "1" }
     });
     child.unref();

@@ -67,8 +67,14 @@ function isRunning() {
   if (!fs.existsSync(PID_FILE)) return false;
   try {
     const pid = parseInt(fs.readFileSync(PID_FILE, "utf8").trim(), 10);
-    process.kill(pid, 0);
-    return pid;
+    if (!pid || isNaN(pid)) return false;
+    try {
+      process.kill(pid, 0);
+      return pid;
+    } catch (e) {
+      if (e.code === "EPERM") return pid;
+      return false;
+    }
   } catch {
     return false;
   }
@@ -279,6 +285,7 @@ function cmdStart() {
   const child = spawn(process.execPath, [BRIDGE_SCRIPT], {
     detached: true,
     stdio: "ignore",
+    windowsHide: true,
     env: { ...process.env, DAEMON_MODE: "1" }
   });
   child.unref();
@@ -292,7 +299,7 @@ function cmdStart() {
       console.log(`\x1b[32m✅ Relay bridge started successfully (PID: ${newPid}).\x1b[0m`);
     } else if (attempts >= 15) {
       clearInterval(interval);
-      console.log("\x1b[31m❌ Daemon startup timed out. Check logs at: /tmp/antigravity-sanction-relay.log\x1b[0m");
+      console.log("\x1b[31m❌ Daemon startup timed out.\x1b[0m");
     }
   }, 200);
 }
@@ -304,8 +311,14 @@ function cmdStop() {
     return;
   }
   try {
-    process.kill(pid, "SIGTERM");
-    fs.unlinkSync(PID_FILE);
+    if (process.platform === "win32") {
+      process.kill(pid);
+    } else {
+      process.kill(pid, "SIGTERM");
+    }
+    if (fs.existsSync(PID_FILE)) {
+      try { fs.unlinkSync(PID_FILE); } catch {}
+    }
     console.log(`\x1b[32m✅ Service stopped (PID: ${pid}).\x1b[0m`);
   } catch (e) {
     console.error("Error stopping service:", e.message);

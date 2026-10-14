@@ -357,6 +357,25 @@ function startServer(port = config.bridgePort) {
       return;
     }
 
+    if (parsed.pathname === "/api/toggle" && req.method === "POST") {
+      let body = "";
+      req.on("data", chunk => body += chunk);
+      req.on("end", () => {
+        try {
+          const data = body ? JSON.parse(body) : {};
+          config.enabled = typeof data.enabled === "boolean" ? data.enabled : !config.enabled;
+          saveConfig();
+          res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+          res.end(JSON.stringify({ success: true, enabled: config.enabled }));
+          log("Relay bypass state set to:", config.enabled);
+        } catch (e) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: e.message }));
+        }
+      });
+      return;
+    }
+
     if (parsed.pathname === "/api/test" && req.method === "GET") {
       testRelayConnection(config.activeRelayUrl).then((result) => {
         res.writeHead(result.ok ? 200 : 502, {
@@ -436,8 +455,25 @@ function startServer(port = config.bridgePort) {
 
   server.listen(port, "127.0.0.1", () => {
     log(`Antigravity Sanction Relay running on http://127.0.0.1:${port}`);
-    fs.writeFileSync(PID_FILE, String(process.pid), "utf8");
+    try {
+      fs.writeFileSync(PID_FILE, String(process.pid), "utf8");
+    } catch {}
   });
+
+  const cleanup = () => {
+    try {
+      if (fs.existsSync(PID_FILE)) {
+        const stored = fs.readFileSync(PID_FILE, "utf8").trim();
+        if (stored === String(process.pid)) {
+          fs.unlinkSync(PID_FILE);
+        }
+      }
+    } catch {}
+    process.exit(0);
+  };
+  process.on("SIGINT", cleanup);
+  process.on("SIGTERM", cleanup);
+  process.on("exit", cleanup);
 
   server.on("error", (err) => {
     if (err.code === "EADDRINUSE") {

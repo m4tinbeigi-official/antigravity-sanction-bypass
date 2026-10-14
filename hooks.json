@@ -3,7 +3,7 @@
     "PreInvocation": [
       {
         "type": "command",
-        "command": "~/.gemini/config/plugins/antigravity-sanction-bypass/scripts/pre-invocation-hook.js"
+        "command": "node scripts/pre-invocation-hook.js"
       }
     ]
   }
