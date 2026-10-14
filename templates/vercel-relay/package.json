@@ -1,0 +1,9 @@
+{
+  "name": "antigravity-vercel-relay",
+  "version": "1.0.0",
+  "description": "Antigravity & Gemini High-Performance Vercel Edge Relay",
+  "private": true,
+  "scripts": {
+    "deploy": "vercel --prod"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "antigravity-sanction-bypass",
+  "displayName": "Antigravity Sanction Bypass (Vercel Relay)",
+  "version": "1.1.0",
+  "description": "Auto-detects Google-sanctioned and restricted regions (Iran, Cuba, Syria, North Korea, Russia, Belarus, Myanmar, etc.) and seamlessly proxies Gemini traffic via Vercel Edge Relays with anti-DNS-poisoning fallbacks.",
+  "suggestedPrompts": [
+    "Check Antigravity sanction bypass and Vercel relay status",
+    "Set or change my custom Vercel relay URL",
+    "Show the 1-minute free personal Vercel relay deployment guide"
+  ]
+}

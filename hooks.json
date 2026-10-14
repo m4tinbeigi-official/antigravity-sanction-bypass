@@ -1,0 +1,10 @@
+{
+  "antigravity-sanction-bypass": {
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "~/.gemini/config/plugins/antigravity-sanction-bypass/scripts/pre-invocation-hook.js"
+      }
+    ]
+  }
+}

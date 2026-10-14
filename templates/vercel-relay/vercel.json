@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "antigravity-vercel-relay",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.js"
+    }
+  ]
+}

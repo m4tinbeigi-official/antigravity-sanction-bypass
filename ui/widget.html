@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antigravity Sanction Bypass</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+  <style>
+    :root {
+      --bg-dark: #0a0d14;
+      --card-bg: rgba(18, 24, 38, 0.88);
+      --border-glow: rgba(99, 102, 241, 0.35);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Vazirmatn", sans-serif;
+    }
+
+    [dir="rtl"] * {
+      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0 !important;
+    }
+
+    body {
+      background: transparent;
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+
+    .widget-container {
+      width: 100%;
+      max-width: 600px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 24px rgba(99, 102, 241, 0.15);
+      padding: 20px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 12px;
+    }
+
+    .title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .icon-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      flex-shrink: 0;
+    }
+
+    .title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .lang-select {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .lang-select option {
+      background: #121826;
+      color: #fff;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .relay-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+
+    .relay-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .relay-url {
+      direction: ltr !important;
+      text-align: left !important;
+      font-size: 12px;
+      font-family: monospace;
+      color: #38bdf8;
+      word-break: break-all;
+      background: rgba(56, 189, 248, 0.08);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .url-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 12px;
+      direction: ltr !important;
+      text-align: left !important;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .url-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .footer-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+    .notification {
+      display: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      margin-top: 8px;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="widget-container" id="app">
+    <div class="header">
+      <div class="title-group">
+        <div class="icon-badge">🚀</div>
+        <div>
+          <div class="title" id="t-title">Antigravity Sanction Bypass (Vercel Relay)</div>
+          <div class="subtitle" id="t-subtitle">Auto-detects sanctioned countries and routes Gemini traffic via Vercel Edge Relays.</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <select class="lang-select" id="lang-select" onchange="changeLanguage(this.value)">
+          <option value="en" selected>🇺🇸 English</option>
+          <option value="fa">🇮🇷 فارسی</option>
+          <option value="ru">🇷🇺 Русский</option>
+          <option value="ar">🇸🇾 العربية</option>
+          <option value="es">🇨🇺 Español</option>
+          <option value="ko">🇰🇵 한국어</option>
+          <option value="be">🇧🇾 Беларуская</option>
+          <option value="my">🇲🇲 မြန်မာ</option>
+        </select>
+        <div class="status-badge" id="status-badge">
+          <span class="status-dot"></span>
+          <span id="status-text">Relay Active</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label" id="t-stat-country">Detected Country</div>
+        <div class="stat-value" id="country-val">United States (US)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" id="t-stat-sanction">Sanction Status</div>
+        <div class="stat-value" style="color: #38bdf8;" id="sanction-val">Unrestricted 🌐</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" id="t-stat-latency">Gemini Latency</div>
+        <div class="stat-value" style="color: #34d399;" id="latency-val">405 ms</div>
+      </div>
+    </div>
+
+    <div class="relay-box">
+      <div class="relay-title">
+        <span id="t-active-relay">Active Vercel Relay:</span>
+        <span style="color: #10b981;">Vercel Edge Gateway</span>
+      </div>
+      <div class="relay-url" id="active-relay-display">https://vercel-relay-71xprds6r-m4tinbeigiis-projects.vercel.app</div>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="custom-relay-input" class="url-input" placeholder="https://your-custom-relay.vercel.app" dir="ltr">
+      <button class="btn" id="save-btn" onclick="saveRelay()">Save & Activate</button>
+    </div>
+
+    <div id="notify" class="notification"></div>
+
+    <div class="footer-actions">
+      <span><span id="t-local-port">Local Bridge Port</span>: <code dir="ltr">127.0.0.1:19876</code></span>
+      <button class="btn btn-secondary" id="test-btn" onclick="testConnection()">⚡ Live Ping Test</button>
+    </div>
+  </div>
+
+  <script>
+    const BRIDGE_API = "http://127.0.0.1:19876";
+    let TRANSLATIONS = {};
+    let currentLang = "en";
+
+    async function loadTranslations() {
+      try {
+        const res = await fetch("../locales/translations.json");
+        if (res.ok) {
+          TRANSLATIONS = await res.json();
+        }
+      } catch (e) {
+        // Fallback embedded translations
+        TRANSLATIONS = {
+          en: { direction: "ltr", title: "Antigravity Sanction Bypass (Vercel Relay)", subtitle: "Auto-detects sanctioned countries and routes Gemini traffic via Vercel Edge Relays.", stat_country: "Detected Country", stat_sanction: "Sanction Status", stat_latency: "Gemini Latency", active_relay: "Active Vercel Relay", save_btn: "Save & Activate", test_btn: "⚡ Live Ping Test", local_port: "Local Bridge Port", notify_testing: "Testing ping to Google Gemini...", notify_success: "✅ Relay connection healthy! Latency: ", notify_saved: "✅ Custom relay saved and activated!" },
+          fa: { direction: "rtl", title: "پل رله ورسل آنتی‌گرویتی (دور زدن تحریم)", subtitle: "تشخیص خودکار تحریم و هدایت ترافیک جمنای از طریق سرورهای لبه ورسل.", stat_country: "کشور شناسایی‌شده", stat_sanction: "وضعیت تحریم", stat_latency: "تاخیر جمنای", active_relay: "رله ورسل فعال", save_btn: "ذخیره و فعال‌سازی", test_btn: "⚡ تست پینگ زنده", local_port: "پورت پل محلی", notify_testing: "در حال سنجش پینگ رله به گوگل جمنای...", notify_success: "✅ اتصال رله عالی است! پینگ: ", notify_saved: "✅ رله اختصاصی جدید با موفقیت فعال شد!" },
+          ru: { direction: "ltr", title: "Обход ограничений Antigravity (Vercel Relay)", subtitle: "Авто-определение региона и маршрутизация Gemini через Edge-серверы Vercel.", stat_country: "Определенная страна", stat_sanction: "Статус санкций", stat_latency: "Пинг Gemini", active_relay: "Активное Vercel реле", save_btn: "Сохранить и включить", test_btn: "⚡ Проверить пинг", local_port: "Локальный порт моста", notify_testing: "Тестирование соединения с Google Gemini...", notify_success: "✅ Соединение с реле успешно! Пинг: ", notify_saved: "✅ Персональное реле успешно активировано!" },
+          ar: { direction: "rtl", title: "تجاوز قيود أنتي غرافيتي (مرحل فيرسل)", subtitle: "اكتشاف تلقائي للمناطق الخاضعة للعقوبات وتوجيه حركة جيمناي عبر فيرسل.", stat_country: "البلد المكتشف", stat_sanction: "حالة العقوبات", stat_latency: "استجابة جيمناي", active_relay: "مرحل فيرسل النشط", save_btn: "حفظ وتفعيل", test_btn: "⚡ اختبار الاستجابة", local_port: "منفذ الجسر المحلي", notify_testing: "جاري اختبار الاتصال بجوجل جيمناي...", notify_success: "✅ اتصال المرحل ممتاز! السرعة: ", notify_saved: "✅ تم تفعيل المرحل الجديد بنجاح!" },
+          es: { direction: "ltr", title: "Bypass de Sanciones Antigravity (Vercel Relay)", subtitle: "Detección automática de países restringidos y enrutamiento de Gemini vía Vercel Edge.", stat_country: "País detectado", stat_sanction: "Estado de restricción", stat_latency: "Latencia Gemini", active_relay: "Relay Vercel activo", save_btn: "Guardar y activar", test_btn: "⚡ Probar latencia", local_port: "Puerto puente local", notify_testing: "Probando conexión con Google Gemini...", notify_success: "✅ ¡Conexión con el relay exitosa! Latencia: ", notify_saved: "✅ ¡Relay guardado y activado!" },
+          ko: { direction: "ltr", title: "Antigravity 제재 우회 (Vercel 릴레이)", subtitle: "제한 국가 자동 감지 및 Vercel Edge 릴레이를 통한 Gemini 트래픽 라우팅.", stat_country: "감지된 국가", stat_sanction: "제재 상태", stat_latency: "Gemini 지연시간", active_relay: "활성 Vercel 릴레이", save_btn: "저장 및 활성화", test_btn: "⚡ 핑 테스트", local_port: "로컬 브릿지 포트", notify_testing: "Google Gemini 연결 테스트 중...", notify_success: "✅ 릴레이 연결 성공! 지연시간: ", notify_saved: "✅ 사용자 지정 릴레이가 활성화되었습니다!" },
+          be: { direction: "ltr", title: "Абыход санкцый Antigravity (Vercel Relay)", subtitle: "Аўтавызначэнне краіны і маршрутызацыя Gemini праз серверы Vercel Edge.", stat_country: "Вызначаная краіна", stat_sanction: "Статус санкцый", stat_latency: "Пінг Gemini", active_relay: "Актыўнае рэле Vercel", save_btn: "Захаваць і актываваць", test_btn: "⚡ Праверыць пінг", local_port: "Лакальны порт моста", notify_testing: "Праверка злучэння з Google Gemini...", notify_success: "✅ Злучэнне з рэле паспяховае! Пінг: ", notify_saved: "✅ Персанальнае рэле актывавана!" },
+          my: { direction: "ltr", title: "Antigravity ပိတ်ပင်မှုကျော်လွှားစနစ် (Vercel Relay)", subtitle: "ကန့်သတ်နိုင်ငံများအား အလိုအလျောက်စစ်ဆေးပြီး Vercel Edge မှတစ်ဆင့် ချိတ်ဆက်ပေးသည်။", stat_country: "တွေ့ရှိသောနိုင်ငံ", stat_sanction: "ပိတ်ပင်မှုအခြေအနေ", stat_latency: "Gemini ကြာချိန်", active_relay: "အသုံးပြုနေသော Vercel Relay", save_btn: "သိမ်းဆည်းပြီး စတင်ပါ", test_btn: "⚡ တိုက်ရိုက်စမ်းသပ်ရန်", local_port: "ဒေသတွင်းဆာဗာပေါက်", notify_testing: "Google Gemini သို့ ချိတ်ဆက်မှုကို စမ်းသပ်နေသည်...", notify_success: "✅ ချိတ်ဆက်မှု အောင်မြင်ပါသည်။ ကြာချိန်: ", notify_saved: "✅ ကိုယ်ပိုင် Relay အား အောင်မြင်စွာ ပြောင်းလဲပြီးပါပြီ။" }
+        };
+      }
+    }
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      const dict = TRANSLATIONS[lang] || TRANSLATIONS["en"];
+      const dir = dict.direction || "ltr";
+      
+      document.documentElement.setAttribute("dir", dir);
+      document.documentElement.setAttribute("lang", lang);
+
+      document.getElementById("t-title").innerText = dict.title;
+      document.getElementById("t-subtitle").innerText = dict.subtitle;
+      document.getElementById("t-stat-country").innerText = dict.stat_country;
+      document.getElementById("t-stat-sanction").innerText = dict.stat_sanction;
+      document.getElementById("t-stat-latency").innerText = dict.stat_latency;
+      document.getElementById("t-active-relay").innerText = dict.active_relay + ":";
+      document.getElementById("save-btn").innerText = dict.save_btn;
+      document.getElementById("test-btn").innerText = dict.test_btn;
+      document.getElementById("t-local-port").innerText = dict.local_port;
+    }
+
+    function changeLanguage(lang) {
+      applyLanguage(lang);
+      try { localStorage.setItem("agy_sanction_lang", lang); } catch (e) {}
+    }
+
+    async function fetchStatus() {
+      try {
+        const res = await fetch(`${BRIDGE_API}/status`);
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('active-relay-display').innerText = data.activeRelayUrl;
+          document.getElementById('country-val').innerText = data.country || "US";
+          const dict = TRANSLATIONS[currentLang] || TRANSLATIONS["en"];
+          document.getElementById('sanction-val').innerText = data.isSanctioned 
+            ? (dict.sanction_active || "Restricted (Relay Active 🛡️)") 
+            : (dict.sanction_free || "Unrestricted (Direct 🌐)");
+        }
+      } catch (e) {
+        document.getElementById('status-badge').style.borderColor = "rgba(239, 68, 68, 0.4)";
+        document.getElementById('status-badge').style.color = "#f87171";
+        document.getElementById('status-text').innerText = "Bridge Standby";
+      }
+    }
+
+    async function testConnection() {
+      const dict = TRANSLATIONS[currentLang] || TRANSLATIONS["en"];
+      showNotify(dict.notify_testing, "#6366f1");
+      try {
+        const res = await fetch(`${BRIDGE_API}/api/test`);
+        const data = await res.json();
+        if (data.ok) {
+          document.getElementById('latency-val').innerText = `${data.latencyMs} ms`;
+          showNotify(`${dict.notify_success}${data.latencyMs} ms`, "#10b981");
+        } else {
+          showNotify(`Error: ${data.message || data.error}`, "#ef4444");
+        }
+      } catch (e) {
+        showNotify("Local bridge not reachable. Run 'agy-relay start' in terminal.", "#f59e0b");
+      }
+    }
+
+    async function saveRelay() {
+      const dict = TRANSLATIONS[currentLang] || TRANSLATIONS["en"];
+      const input = document.getElementById('custom-relay-input').value.trim();
+      if (!input || !input.startsWith("http")) {
+        showNotify("Please enter a valid URL starting with https://", "#ef4444");
+        return;
+      }
+
+      showNotify("Saving and verifying new Vercel relay...", "#6366f1");
+      try {
+        const res = await fetch(`${BRIDGE_API}/api/set-relay`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: input })
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('active-relay-display').innerText = data.activeRelayUrl;
+          document.getElementById('custom-relay-input').value = "";
+          showNotify(dict.notify_saved, "#10b981");
+        } else {
+          showNotify(`Error: ${data.error}`, "#ef4444");
+        }
+      } catch (e) {
+        showNotify("Could not communicate with local relay bridge.", "#ef4444");
+      }
+    }
+
+    function showNotify(msg, color) {
+      const box = document.getElementById('notify');
+      box.style.display = "block";
+      box.style.background = `${color}22`;
+      box.style.border = `1px solid ${color}66`;
+      box.style.color = color;
+      box.innerText = msg;
+    }
+
+    (async () => {
+      await loadTranslations();
+      let saved = "en";
+      try { saved = localStorage.getItem("agy_sanction_lang") || "en"; } catch(e) {}
+      document.getElementById("lang-select").value = saved;
+      applyLanguage(saved);
+      fetchStatus();
+    })();
+  </script>
+</body>
+</html>
