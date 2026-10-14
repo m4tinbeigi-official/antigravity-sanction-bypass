@@ -365,6 +365,10 @@ function startServer(port = config.bridgePort) {
           const data = body ? JSON.parse(body) : {};
           config.enabled = typeof data.enabled === "boolean" ? data.enabled : !config.enabled;
           saveConfig();
+          try {
+            const { autoConfigureAntigravity } = require("./configure-antigravity");
+            autoConfigureAntigravity(config.enabled);
+          } catch {}
           res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
           res.end(JSON.stringify({ success: true, enabled: config.enabled }));
           log("Relay bypass state set to:", config.enabled);

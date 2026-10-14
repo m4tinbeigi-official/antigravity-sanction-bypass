@@ -13,6 +13,7 @@ const { spawn } = require("child_process");
 const PID_FILE = path.join(os.tmpdir(), "antigravity-sanction-relay.pid");
 const BRIDGE_SCRIPT = path.join(__dirname, "relay-bridge.js");
 const CONFIG_FILE = path.join(os.homedir(), ".gemini", "antigravity", "sanction-relay-config.json");
+const { autoConfigureAntigravity } = require("./configure-antigravity");
 
 function isBridgeRunning() {
   if (!fs.existsSync(PID_FILE)) return false;
@@ -52,6 +53,9 @@ async function main() {
   }
 
   ensureBridgeStarted();
+  try {
+    autoConfigureAntigravity(true);
+  } catch {}
 
   let injectSteps = [];
 
