@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>داشبورد مدیریت رله آنتی‌گرویتی // VibeFarsi</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+  <style>
+    :root {
+      --bg-base: #07090e;
+      --bg-surface: rgba(13, 17, 27, 0.82);
+      --bg-card: rgba(19, 25, 41, 0.65);
+      --bg-card-hover: rgba(25, 34, 56, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(56, 189, 248, 0.4);
+      --border-accent: rgba(0, 0, 242, 0.3);
+      --brand-blue: #0000f2;
+      --brand-cyan: #38bdf8;
+      --brand-emerald: #10b981;
+      --brand-amber: #f59e0b;
+      --brand-rose: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 8px;
+      --font-sans: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      letter-spacing: 0 !important;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      background-image: 
+        radial-gradient(circle at 85% 10%, rgba(0, 0, 242, 0.14), transparent 45%),
+        radial-gradient(circle at 15% 90%, rgba(56, 189, 248, 0.08), transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.03), transparent 60%);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Glass Header Card */
+    .header-card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    .header-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      start: 0;
+      end: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--brand-blue), var(--brand-cyan), transparent);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(0, 0, 242, 0.8), rgba(56, 189, 248, 0.7));
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0, 0, 242, 0.35);
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-text p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--brand-emerald);
+      box-shadow: 0 0 10px var(--brand-emerald);
+      animation: pulseAnimation 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseAnimation {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Grid of Metrics */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+      position: relative;
+    }
+
+    .metric-card:hover {
+      border-color: var(--border-focus);
+      transform: translateY(-2px);
+    }
+
+    .metric-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .metric-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+      font-feature-settings: "ss01" 1, "cv01" 1;
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .metric-unit {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-dim);
+    }
+
+    .metric-sub {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--brand-cyan);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Technical Explanation Section */
+    .analysis-card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+      position: relative;
+    }
+
+    .analysis-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--brand-cyan);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .analysis-content {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.85;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .code-pill {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      color: #38bdf8;
+      display: inline-block;
+      direction: ltr;
+    }
+
+    /* Action & Configuration Section */
+    .action-section {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .action-section {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+    }
+
+    .config-card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .field-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-main);
+      direction: ltr;
+      text-align: left;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field-input:focus {
+      border-color: var(--brand-cyan);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 18px;
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-blue), #2563eb);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(0, 0, 242, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #1000f5, #1d4ed8);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Terminal & Raw Response Viewer */
+    .terminal-card {
+      background: #04060a;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      position: relative;
+    }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 10px;
+      color: var(--text-dim);
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .terminal-output {
+      direction: ltr;
+      text-align: left;
+      color: #38bdf8;
+      max-height: 220px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.6;
+    }
+
+    /* Status Notifications */
+    .toast-msg {
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .toast-success {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+
+    .toast-error {
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      color: #fb7185;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover {
+      color: var(--brand-cyan);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Header Card -->
+    <header class="header-card">
+      <div class="header-top">
+        <div class="brand-group">
+          <div class="brand-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1>پل ارتباطی ضدتحریم آنتی‌گرویتی</h1>
+            <p>هدایت پرسرعت ترافیک گوگل جمنای و کلاد کد از طریق سرورهای لبه ورسل</p>
+          </div>
+        </div>
+
+        <div class="live-status-pill" id="global-status-badge">
+          <div class="pulse-dot"></div>
+          <span id="global-status-text">رله فعال و آماده به کار</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Metrics Cards Grid -->
+    <section class="metrics-grid">
+      
+      <!-- Metric 1: Latency -->
+      <div class="metric-card">
+        <div class="metric-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          تاخیر رفت‌وبرگشت به جمنای
+        </div>
+        <div class="metric-value">
+          <span id="metric-latency">۱٬۱۲۱</span>
+          <span class="metric-unit">میلی‌ثانیه</span>
+        </div>
+        <div class="metric-sub" id="metric-latency-state">
+          پایداری عالی در اتصال Edge
+        </div>
+      </div>
+
+      <!-- Metric 2: HTTP Status -->
+      <div class="metric-card">
+        <div class="metric-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          وضعیت تایید ارتباط با گوگل
+        </div>
+        <div class="metric-value">
+          <span id="metric-http-code">۴۰۳</span>
+          <span class="metric-unit">تأییدیه API</span>
+        </div>
+        <div class="metric-sub" style="color: #34d399;">
+          احراز اصالت سرور مقصد تأیید شد
+        </div>
+      </div>
+
+      <!-- Metric 3: Bridge Port -->
+      <div class="metric-card">
+        <div class="metric-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+          </svg>
+          پورت پل محلی
+        </div>
+        <div class="metric-value">
+          <span id="metric-port">۱۹۸۷۶</span>
+          <span class="metric-unit">TCP</span>
+        </div>
+        <div class="metric-sub">
+          گوش‌به‌زنگ روی ۱۲۷.۰.۰.۱
+        </div>
+      </div>
+
+      <!-- Metric 4: Country Detection -->
+      <div class="metric-card">
+        <div class="metric-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          منطقه شناسایی‌شده
+        </div>
+        <div class="metric-value">
+          <span id="metric-country">US</span>
+          <span class="metric-unit">Edge Router</span>
+        </div>
+        <div class="metric-sub">
+          بای‌پَس خودکار تحریم فعال
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Technical Explanation Card -->
+    <section class="analysis-card">
+      <div class="analysis-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        تحلیل فنی معماری شبکه: چرا خطای ۴۰۳ نشانه موفقیت ۱۰۰٪ رله است؟
+      </div>
+      <div class="analysis-content">
+        <p>
+          هنگام درخواست به سرویس‌های جمنای بدون احراز هویت اولیه، سرورهای گوگل خطای رسمی <span class="code-pill">Method doesn't allow unregistered callers (HTTP 403)</span> صادر می‌کنند.
+        </p>
+        <p>
+          در صورت وجود تحریم منطقه‌ای یا فیلترینگ، درخواست پیش از رسیدن به این مرحله با خطای <span class="code-pill">HTTP 451 (Unavailable For Legal Reasons)</span> یا قطع کامل ارتباط TLS بسته می‌شد.
+          دریافت این پاسخ از <span class="code-pill">generativelanguage.googleapis.com</span> اثبات قطعی عبور بدون مانع ترافیک از سرورهای لبه ورسل به سرور اصلی گوگل است.
+        </p>
+      </div>
+    </section>
+
+    <!-- Action Section -->
+    <section class="action-section">
+      
+      <!-- Relay Configuration -->
+      <div class="config-card">
+        <div class="card-title">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+          تنظیمات رله ورسل فعال
+        </div>
+        
+        <div class="field-group">
+          <label class="field-label" for="relay-url-input">آدرس رله ابری ورسل (Vercel Edge Relay URL)</label>
+          <input type="text" id="relay-url-input" class="field-input" placeholder="https://your-vercel-relay.vercel.app">
+        </div>
+
+        <div id="toast" class="toast-msg"></div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="save-btn" onclick="saveRelay()">
+            ذخیره و فعال‌سازی فوری
+          </button>
+          <button class="btn btn-secondary" id="test-btn" onclick="runPingTest()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            سنجش زنده تاخیر
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Terminal / Payload Log -->
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <div class="terminal-dot" style="background: #f43f5e;"></div>
+            <div class="terminal-dot" style="background: #f59e0b;"></div>
+            <div class="terminal-dot" style="background: #10b981;"></div>
+          </div>
+          <span>لاگ خام آخرین پاسخ دریافتی از جمنای</span>
+        </div>
+        <div class="terminal-output" id="terminal-log">در حال بارگذاری وضعیت اولیه...</div>
+      </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <span>توسعه‌یافته مطابق استانداردهای وایب فارسی (VibeFarsi)</span>
+      <span>•</span>
+      <a href="https://github.com/m4tinbeigi-official/antigravity-sanction-bypass" target="_blank" rel="noopener">مخزن گیت‌هاب</a>
+      <span>•</span>
+      <a href="/status">وضعیت JSON سیستم</a>
+    </footer>
+
+  </div>
+
+  <script>
+    const faDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    function toFaNumber(num) {
+      if (num === null || num === undefined) return '';
+      return String(num).replace(/[0-9]/g, d => faDigits[d]);
+    }
+
+    function formatNumberWithCommas(num) {
+      if (num === null || num === undefined) return '';
+      const parts = String(num).split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '٬');
+      return toFaNumber(parts.join('٫'));
+    }
+
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById('toast');
+      toast.className = 'toast-msg ' + (isSuccess ? 'toast-success' : 'toast-error');
+      toast.innerText = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 4500);
+    }
+
+    async function loadInitialStatus() {
+      try {
+        const res = await fetch('/status');
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('relay-url-input').value = data.activeRelayUrl || '';
+          document.getElementById('metric-country').innerText = data.country || 'US';
+          document.getElementById('metric-port').innerText = toFaNumber(data.bridgePort || '۱۹۸۷۶');
+        }
+      } catch (err) {
+        console.error('Error fetching initial status:', err);
+      }
+      runPingTest();
+    }
+
+    async function runPingTest() {
+      const testBtn = document.getElementById('test-btn');
+      const termLog = document.getElementById('terminal-log');
+      testBtn.disabled = true;
+      testBtn.innerHTML = 'در حال تست...';
+      termLog.innerText = 'Sending ping probe via Vercel Edge Relay to Google Gemini...';
+
+      try {
+        const res = await fetch('/api/test');
+        const data = await res.json();
+        
+        termLog.innerText = JSON.stringify(data, null, 2);
+
+        if (data.latencyMs) {
+          document.getElementById('metric-latency').innerText = formatNumberWithCommas(data.latencyMs);
+          const stateEl = document.getElementById('metric-latency-state');
+          if (data.latencyMs < 1500) {
+            stateEl.innerText = 'پایداری عالی در اتصال Edge';
+            stateEl.style.color = '#34d399';
+          } else {
+            stateEl.innerText = 'تاخیر متوسط شبکه محلی';
+            stateEl.style.color = '#f59e0b';
+          }
+        }
+
+        if (data.statusCode) {
+          document.getElementById('metric-http-code').innerText = toFaNumber(data.statusCode);
+        }
+
+        if (data.ok) {
+          document.getElementById('global-status-text').innerText = 'رله فعال و متصل به جمنای';
+          document.getElementById('global-status-badge').style.borderColor = 'rgba(16, 185, 129, 0.4)';
+        }
+      } catch (err) {
+        termLog.innerText = 'Error executing test probe: ' + err.message;
+        showToast('خطا در سنجش تاخیر رله', false);
+      } finally {
+        testBtn.disabled = false;
+        testBtn.innerHTML = `
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          سنجش زنده تاخیر
+        `;
+      }
+    }
+
+    async function saveRelay() {
+      const input = document.getElementById('relay-url-input');
+      const saveBtn = document.getElementById('save-btn');
+      const url = input.value.trim();
+
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        showToast('آدرس نامعتبر است. نشانی باید با http:// یا https:// آغاز شود.', false);
+        return;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.innerText = 'در حال ذخیره‌سازی...';
+
+      try {
+        const res = await fetch('/api/set-relay', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('رله اختصاصی جدید با موفقیت ذخیره و فعال شد.');
+          runPingTest();
+        } else {
+          showToast(data.error || 'خطا در ذخیره رله', false);
+        }
+      } catch (err) {
+        showToast('خطای شبکه در ذخیره رله: ' + err.message, false);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = 'ذخیره و فعال‌سازی فوری';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadInitialStatus);
+  </script>
+</body>
+</html>

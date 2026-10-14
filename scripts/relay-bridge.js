@@ -400,20 +400,15 @@ function startServer(port = config.bridgePort) {
       return;
     }
 
-    // Default welcome
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(`
-      <!DOCTYPE html>
-      <html dir="rtl" lang="fa">
-      <head><meta charset="UTF-8"><title>Antigravity Sanction Bypass</title></head>
-      <body style="font-family: system-ui; text-align: center; padding: 40px; line-height: 1.8;">
-        <h2>پل عبور از تحریم آنتی‌گرویتی (Vercel Relay) فعال است 🚀</h2>
-        <p>کشور تشخیص‌داده‌شده: <b>${config.lastCountry}</b> | وضعیت تحریم: <b>${config.isSanctioned ? "تحریم شده (رله فعال)" : "عادی"}</b></p>
-        <p>آدرس رله ورسل فعال: <code dir="ltr">${config.activeRelayUrl}</code></p>
-        <p><a href="/status">مشاهده وضعیت JSON</a> | <a href="/api/test">تست اتصال به جمنای</a></p>
-      </body>
-      </html>
-    `);
+    // Default VibeFarsi Dashboard Panel
+    const PANEL_PATH = path.join(__dirname, "..", "ui", "panel.html");
+    if (parsed.pathname === "/" || parsed.pathname === "/panel" || parsed.pathname === "/test") {
+      if (fs.existsSync(PANEL_PATH)) {
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        res.end(fs.readFileSync(PANEL_PATH, "utf8"));
+        return;
+      }
+    }
   });
 
   // Handle HTTPS CONNECT tunneling
